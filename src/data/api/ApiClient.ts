@@ -11,24 +11,24 @@ const Get = async <T>(endpoint: string): Promise<T> => {
     });
 
     const data: T = res.data;
-    console.log(`data ${data}`);
     return data;
   } catch (error) {
     console.log(error);
     throw error;
   }
+
 };
 
 const Post = async <T>(endpoint: string, body: JSON): Promise<T> => {
   try {
-    const res = axios.post(`${Constants.url}${endpoint}`, body, {
+    const res = await axios.post(`${Constants.url}${endpoint}`, body, {
       headers: {
         Authorization: `Bearer ${Constants.tokenApi}`,
         Accept: 'application/json',
       },
     });
 
-    const data: T = (await res).data;
+    const data: T = res.data;
     return data;
   } catch (error) {
     throw error;
@@ -37,14 +37,14 @@ const Post = async <T>(endpoint: string, body: JSON): Promise<T> => {
 
 const Update = async <T>(endpoint: string, body: JSON): Promise<T> => {
   try {
-    const res = axios.put(`${Constants.url}${endpoint}`, body, {
+    const res = await axios.put(`${Constants.url}${endpoint}`, body, {
       headers: {
         Authorization: `Bearer ${Constants.tokenApi}`,
         Accept: 'application/json',
       },
     });
 
-    const data: T = (await res).data;
+    const data: T = res.data;
     return data;
   } catch (error) {
     throw error;
@@ -53,14 +53,14 @@ const Update = async <T>(endpoint: string, body: JSON): Promise<T> => {
 
 const Delete = async <T>(endpoint: string): Promise<T> => {
   try {
-    const res = axios.delete(`${Constants.url}${endpoint}`, {
+    const res = await axios.delete(`${Constants.url}${endpoint}`, {
       headers: {
         Authorization: `Bearer ${Constants.tokenApi}`,
         Accept: 'application/json',
       },
     });
 
-    const data: T = (await res).data;
+    const data: T = res.data;
     return data;
   } catch (error) {
     throw error;

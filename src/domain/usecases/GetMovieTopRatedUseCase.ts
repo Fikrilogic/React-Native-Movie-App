@@ -2,12 +2,12 @@ import { Constants } from '../../commons';
 import {MovieRepository} from '../../data/repository/MovieRepository';
 import {Movie, MovieResponse} from '../models/Movie';
 
-export interface GetMovieNowPlayingUseCase {
+export interface GetMovieTopRatedUseCase {
   call: () => Promise<MovieResponse>;
 }
 
 const usecase = async (repository: MovieRepository): Promise<MovieResponse> => {
-  const movies = await repository.getNowPlaying();
+  const movies = await repository.getTopRated();
   movies.results = movies.results.slice(0, 8).map((movie: Movie) => {
     const newMovie = movie
     newMovie.poster_path = `${Constants.imgUrl}${movie.poster_path}`
@@ -16,8 +16,8 @@ const usecase = async (repository: MovieRepository): Promise<MovieResponse> => {
   return movies;
 };
 
-export const GetMovieNowPlayingUseCaseImpl = (
+export const GetMovieTopRatedUseCaseImpl = (
   repository: MovieRepository,
-): GetMovieNowPlayingUseCase => ({
+): GetMovieTopRatedUseCase => ({
   call: () => usecase(repository),
 });

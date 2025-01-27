@@ -1,16 +1,13 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {NavigationType, RouteNavigation} from '../../../navigations/index';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {CompositeScreenProps, useFocusEffect} from '@react-navigation/native';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Layout, useStyleSheet} from '@ui-kitten/components';
 import {ScrollView, StyleSheet} from 'react-native';
 import {MovieHorizontalList} from '../../../components';
-import {Movie} from '../../../../domain/models/Movie';
 import {useHomeController} from '../../../../controller/DashboardHomeController';
-import {GetMovieNowPlayingUseCaseImpl} from '../../../../domain/usecases/GetMovieNowPlayingUseCase';
-import {MovieRepositoryImpl} from '../../../../data/repository/MovieRepository';
-import {ApiClientImpl} from '../../../../data/api/ApiClient';
+import {useApplication} from '../../../../module/AppModule';
 
 type DashboardHomeProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -25,37 +22,41 @@ type DashboardHomeProps = CompositeScreenProps<
 
 const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
   const styles = useStyleSheet(dashboardHomeStyle);
-  const {fetchMovieNowPlaying, moviesNowPlaying} = useHomeController(
-    GetMovieNowPlayingUseCaseImpl(MovieRepositoryImpl(ApiClientImpl())),
+  const {
+    getMovieNowPlayingUsecase,
+    getMoviePopularUsecase,
+    getMovieTopRatedUsecase,
+    getMovieUpcomingUsecase,
+  } = useApplication();
+
+  const {fetchMovie, moviesNowPlaying, moviesPopular, moviesTopRated, moviesUpcoming} = useHomeController(
+    getMovieNowPlayingUsecase,
+    getMoviePopularUsecase,
+    getMovieTopRatedUsecase,
+    getMovieUpcomingUsecase,
   );
 
   useEffect(() => {
-    fetchMovieNowPlaying();
-  }, [fetchMovieNowPlaying]);
-  
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchMovieNowPlaying();
-  //   }, []),
-  // );
+    fetchMovie();
+  }, [fetchMovie]);
 
   return (
     <Layout level="1" style={styles.container_row}>
-      <ScrollView>
+      <ScrollView  contentContainerStyle={styles.scroll_container}>
         <MovieHorizontalList
           data={moviesNowPlaying?.results ?? []}
           title="Now Playing"
         />
         <MovieHorizontalList
-          data={moviesNowPlaying?.results ?? []}
+          data={moviesUpcoming?.results ?? []}
           title="Upcoming"
         />
         <MovieHorizontalList
-          data={moviesNowPlaying?.results ?? []}
+          data={moviesPopular?.results ?? []}
           title="Popular"
         />
         <MovieHorizontalList
-          data={moviesNowPlaying?.results ?? []}
+          data={moviesTopRated?.results ?? []}
           title="Top Rated"
         />
       </ScrollView>
@@ -66,8 +67,11 @@ const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
 const dashboardHomeStyle = StyleSheet.create({
   container_row: {
     flex: 1,
-    flexDirection: 'column',
   },
+  scroll_container: {
+    paddingVertical: 20,
+    height: 'auto',
+  }
 });
 
 export default DashboardHome;
