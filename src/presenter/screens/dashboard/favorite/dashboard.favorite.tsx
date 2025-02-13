@@ -3,7 +3,7 @@ import {CompositeScreenProps, useFocusEffect} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {NavigationType, RouteNavigation} from '../../../navigations';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Layout} from '@ui-kitten/components';
+import {Layout, Text, TopNavigation} from '@ui-kitten/components';
 import MovieVerticalList from '../../../components/list/MovieVerticalList';
 import {useApplication} from '../../../../module/AppModule';
 import {useFavoriteController} from '../../../../controller/DashboardFavoriteController';
@@ -11,7 +11,7 @@ import {
   LoadingSpinner,
   SpinnerType,
 } from '../../../components/loading/LoadingSpinner';
-import { ErrorEmptyItem } from '../../../components/error/ErrorEmptyItem';
+import {ErrorEmptyItem} from '../../../components/error/ErrorEmptyItem';
 
 type DashboardFavoriteProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -41,20 +41,31 @@ const DashboardFavorite = ({navigation}: DashboardFavoriteProps) => {
 
   return (
     <Layout
-      level="2"
       style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      {loading && <LoadingSpinner type={SpinnerType.GIANT} />}
-      {!loading && movie.length !== 0 && (
-        <MovieVerticalList
-          data={movie}
-          onClick={movie => navigateToDetails(movie.id ?? '0')}
-        />
-      )}
-      {!loading && movie.length === 0 && <ErrorEmptyItem/>}
+        flex: 1
+      }}
+    >
+      <TopNavigation
+        title={() => <Text category="h5">Favorite</Text>}
+        alignment="center"
+      />
+      <Layout
+        level="2"
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: 4
+        }}>
+        {loading && <LoadingSpinner type={SpinnerType.GIANT} />}
+        {!loading && movie.length !== 0 && (
+          <MovieVerticalList
+            data={movie}
+            onClick={movie => navigateToDetails(movie.id ?? '0')}
+          />
+        )}
+        {!loading && movie.length === 0 && <ErrorEmptyItem />}
+      </Layout>
     </Layout>
   );
 };

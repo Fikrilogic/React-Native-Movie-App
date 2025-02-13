@@ -3,7 +3,12 @@ import {NavigationType, RouteNavigation} from '../../../navigations/index';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Layout, useStyleSheet} from '@ui-kitten/components';
+import {
+  Layout,
+  Text,
+  TopNavigation,
+  useStyleSheet,
+} from '@ui-kitten/components';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {MovieHorizontalList} from '../../../components';
 import {useHomeController} from '../../../../controller/DashboardHomeController';
@@ -58,6 +63,10 @@ const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
 
   return (
     <Layout level="2" style={styles.container_row}>
+      <TopNavigation
+        title={() => <Text category="h5">Home</Text>}
+        alignment="center"
+      />
       {loading && (
         <Layout level="2" style={styles.loading_container}>
           <LoadingSpinner type={SpinnerType.GIANT} />

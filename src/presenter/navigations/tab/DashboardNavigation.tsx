@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   BottomTabBarButtonProps,
+  BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {DashboardScreen} from '../../screens/index';
@@ -8,11 +9,21 @@ import colors from '../../../commons/theme/color';
 import {Pressable} from 'react-native';
 import RouteNavigation from '../RoutesName';
 import {DashboardTabParamList} from '../Type';
-import {Icon, useTheme} from '@ui-kitten/components';
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  Icon,
+  useTheme,
+} from '@ui-kitten/components';
 
 const Tab = createBottomTabNavigator<DashboardTabParamList>();
 
-const getTabBarIcon = (routeName: string, focused: boolean, size: number, color: string) => {
+const getTabBarIcon = (
+  routeName: string,
+  focused: boolean,
+  size: number,
+  color: string,
+) => {
   let iconName: string;
 
   switch (routeName) {
@@ -42,8 +53,22 @@ const getTabBarIcon = (routeName: string, focused: boolean, size: number, color:
   );
 };
 
-const DashboardNavigation = () => {
+const BottomTabBar = (props: BottomTabBarProps) => {
+  return (
+    <BottomNavigation
+      selectedIndex={props.state.index}
+      onSelect={index =>
+        props.navigation.navigate(props.state.routeNames[index])
+      }
+      >
+      <BottomNavigationTab icon={<Icon name="home" />} title="Home" />
+      <BottomNavigationTab icon={<Icon name="search" />} title="Search" />
+      <BottomNavigationTab icon={<Icon name="star" />} title="Favorite" />
+    </BottomNavigation>
+  );
+};
 
+const DashboardNavigation = () => {
   const theme = useTheme();
 
   const customRippleTabButton = (props: BottomTabBarButtonProps) => (
@@ -59,18 +84,8 @@ const DashboardNavigation = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, size, color}) => {
-          return getTabBarIcon(route.name, focused, size, color);
-        },
-        tabBarStyle: {
-          backgroundColor: theme['color-primary-700'],
-        },
-        tabBarActiveTintColor: colors.dark,
-        tabBarInactiveTintColor: colors.light,
-        animation: 'shift',
-        tabBarButton: customRippleTabButton,
-      })}>
+      tabBar={props => <BottomTabBar {...props} />}
+      >
       <Tab.Screen
         name={RouteNavigation.HOME}
         component={DashboardScreen.Home}
@@ -84,6 +99,7 @@ const DashboardNavigation = () => {
             fontWeight: 'bold',
           },
           headerTitleAlign: 'center',
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -99,6 +115,7 @@ const DashboardNavigation = () => {
             fontWeight: 'bold',
           },
           headerTitleAlign: 'center',
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -114,6 +131,7 @@ const DashboardNavigation = () => {
             fontWeight: 'bold',
           },
           headerTitleAlign: 'center',
+          headerShown: false
         }}
       />
     </Tab.Navigator>

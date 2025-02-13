@@ -4,12 +4,15 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {NavigationType, RouteNavigation} from '../../../navigations';
-import {Icon, Layout} from '@ui-kitten/components';
+import {Icon, Layout, Text, TopNavigation} from '@ui-kitten/components';
 import InputSearch from '../../../components/input/InputSearch';
 import MovieGridList from '../../../components/list/MovieGridList';
 import {useSearchController} from '../../../../controller/DashboardSearchController';
 import {useApplication} from '../../../../module/AppModule';
-import { LoadingSpinner, SpinnerType } from '../../../components/loading/LoadingSpinner';
+import {
+  LoadingSpinner,
+  SpinnerType,
+} from '../../../components/loading/LoadingSpinner';
 
 type DashboardSearchProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -37,11 +40,14 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
   const navigateToDetails = (id: string) => {
     navigation.navigate(RouteNavigation.DETAIL, {id});
   };
-  
 
   return (
     <Layout style={styles.main_container} level="2">
-      <Layout level="2" style={{flex: 0, justifyContent: 'center'}}>
+      <TopNavigation
+        title={() => <Text category="h5">Search</Text>}
+        alignment="center"
+      />
+      <Layout level="2" style={{flex: 0, justifyContent: 'center', marginTop: 8}}>
         <InputSearch
           value={search}
           style={styles.input_search_style}
@@ -67,18 +73,20 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
           alignItems: 'center',
           marginTop: 16,
         }}>
-        {loading && <LoadingSpinner type={SpinnerType.GIANT}/>}
-        {!loading && <MovieGridList
-          maxCol={4}
-          data={movie}
-          onLoadMore={() => {
-            setPagination(prev => {
-              return {page: prev.page + 1, total_pages: prev.total_pages};
-            });
-            fetchPaginationMovie();
-          }}
-          onClick={(movie) => navigateToDetails(movie.id ?? '0')}
-        />}
+        {loading && <LoadingSpinner type={SpinnerType.GIANT} />}
+        {!loading && (
+          <MovieGridList
+            maxCol={4}
+            data={movie}
+            onLoadMore={() => {
+              setPagination(prev => {
+                return {page: prev.page + 1, total_pages: prev.total_pages};
+              });
+              fetchPaginationMovie();
+            }}
+            onClick={movie => navigateToDetails(movie.id ?? '0')}
+          />
+        )}
       </Layout>
     </Layout>
   );
@@ -87,7 +95,7 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingBottom: 20,
     flexDirection: 'column',
   },
   scroll_container: {
