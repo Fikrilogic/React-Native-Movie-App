@@ -1,16 +1,15 @@
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView, FlatList} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import {NavigationType, RouteNavigation} from '../../../navigations';
-import {Button} from '@react-navigation/elements';
 import {Icon, Layout} from '@ui-kitten/components';
 import InputSearch from '../../../components/input/InputSearch';
 import MovieGridList from '../../../components/list/MovieGridList';
-import {Movie} from '../../../../domain/models/Movie';
 import {useSearchController} from '../../../../controller/DashboardSearchController';
 import {useApplication} from '../../../../module/AppModule';
+import { LoadingSpinner, SpinnerType } from '../../../components/loading/LoadingSpinner';
 
 type DashboardSearchProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -28,11 +27,17 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
   const {
     movie,
     search,
+    loading,
     fetchSubmitMovie,
     fetchPaginationMovie,
     onChangeSearch,
     setPagination,
   } = useSearchController(getMovieSearch);
+
+  const navigateToDetails = (id: string) => {
+    navigation.navigate(RouteNavigation.DETAIL, {id});
+  };
+  
 
   return (
     <Layout style={styles.main_container} level="2">
@@ -57,22 +62,23 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
       <Layout
         level="2"
         style={{
-          flex: 0,
+          flex: 1,
           justifyContent: 'center',
-          backgroundColor: 'red',
+          alignItems: 'center',
           marginTop: 16,
         }}>
-        <MovieGridList
+        {loading && <LoadingSpinner type={SpinnerType.GIANT}/>}
+        {!loading && <MovieGridList
           maxCol={4}
           data={movie}
           onLoadMore={() => {
             setPagination(prev => {
-              console.log(prev.total_pages);
               return {page: prev.page + 1, total_pages: prev.total_pages};
             });
             fetchPaginationMovie();
           }}
-        />
+          onClick={(movie) => navigateToDetails(movie.id ?? '0')}
+        />}
       </Layout>
     </Layout>
   );

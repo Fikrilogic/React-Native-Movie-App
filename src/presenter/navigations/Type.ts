@@ -10,7 +10,7 @@ type DashboardTabParamList = {
 
 type RootStackParamList = {
   DASHBOARD: NavigatorScreenParams<DashboardTabParamList>;
-  DETAIL: {movie: Movie};
+  DETAIL: {id: string};
 };
 
 export type {RootStackParamList,DashboardTabParamList};

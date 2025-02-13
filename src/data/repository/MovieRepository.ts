@@ -19,7 +19,10 @@ const getMovieDetail = (
 
 const getMoviesFavorite = async (db: DB): Promise<MovieFavorite[]> => {
   try {
-    let {rows} = await db.execute(`SELECT * FROM ${MOVIE_TABLE_NAME};`);
+    let {rows} = await db.execute(
+      `SELECT * FROM ${MOVIE_TABLE_NAME} WHERE IsFavorite = ?;`,
+      [1],
+    );
     const listMovie: MovieFavorite[] = [];
     rows.forEach(data => {
       listMovie.push(new MovieFavorite(data));
@@ -27,7 +30,6 @@ const getMoviesFavorite = async (db: DB): Promise<MovieFavorite[]> => {
 
     return listMovie;
   } catch (e) {
-    console.log(e);
     return [];
   }
 };
@@ -35,18 +37,17 @@ const getMoviesFavorite = async (db: DB): Promise<MovieFavorite[]> => {
 const getMovieFavorite = async (
   db: DB,
   id: string,
-): Promise<MovieFavorite> => {
+): Promise<MovieFavorite | null> => {
   try {
-    console.log(`movie id ${id}`)
     let {rows} = await db.execute(
       `SELECT * FROM ${MOVIE_TABLE_NAME} WHERE Id = ?;`,
       [id],
     );
 
-    let movie: MovieFavorite = new MovieFavorite(rows[0])
+    let movie: MovieFavorite = new MovieFavorite(rows[0]);
     return movie;
   } catch (e) {
-    throw e
+    return null;
   }
 };
 
@@ -62,23 +63,25 @@ const addFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
         true,
       ],
     );
-    console.log(`status: ${res.rowsAffected}`);
     return;
   } catch (e) {
-    console.log(e);
+    throw e;
   }
 };
 
-const updateFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
+const updateFavoriteMovie = async (
+  db: DB,
+  movie: Movie,
+  isFavorite: boolean,
+): Promise<void> => {
   try {
     const res = await db.execute(
       `UPDATE ${MOVIE_TABLE_NAME} SET IsFavorite = ? WHERE Id = ?;`,
-      [true, movie.id ?? '0'],
+      [isFavorite, movie.id ?? '0'],
     );
-    console.log(`status: ${res.rowsAffected}`);
     return;
   } catch (e) {
-    console.log(e);
+    throw e;
   }
 };
 
@@ -90,8 +93,9 @@ export interface MovieRepository {
   search: (query: string, page: number) => Promise<MovieResponse>;
   detail: (id: string) => Promise<Movie>;
   getFavorites: () => Promise<MovieFavorite[]>;
-  getFavorite: (id: string) => Promise<MovieFavorite>;
+  getFavorite: (id: string) => Promise<MovieFavorite | null>;
   addFavorite: (movie: Movie) => Promise<void>;
+  updateFavorite: (movie: Movie, isFavorite: boolean) => Promise<void>;
 }
 
 export const MovieRepositoryImpl = (
@@ -111,4 +115,6 @@ export const MovieRepositoryImpl = (
   getFavorites: () => getMoviesFavorite(db),
   getFavorite: (id: string) => getMovieFavorite(db, id),
   addFavorite: (movie: Movie) => addFavoriteMovie(db, movie),
+  updateFavorite: (movie: Movie, isFavorite: boolean) =>
+    updateFavoriteMovie(db, movie, isFavorite),
 });

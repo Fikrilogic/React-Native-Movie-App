@@ -3,42 +3,49 @@ import {Movie} from '../../../domain/models/Movie';
 import {Layout, List, ListItem, Text} from '@ui-kitten/components';
 import MovieCatalogPlaceholder from '../placeholder/MovieCatalogPlaceholder';
 import {Dimensions, StyleSheet, View} from 'react-native';
+import {TouchableWithoutFeedback} from '@ui-kitten/components/devsupport';
 
 type MovieGridListProps = {
   data: Movie[];
   maxCol: number;
   onLoadMore?: () => void;
+  onClick?: (movie: Movie) => void;
 };
 
 const screenWidth = Dimensions.get('screen').width;
 
-const MovieGridList = ({data, maxCol, onLoadMore}: MovieGridListProps) => {
+const MovieGridList = ({
+  data,
+  maxCol,
+  onLoadMore,
+  onClick,
+}: MovieGridListProps) => {
   const MovieItem = useMemo(() => {
     return ({item, index}: {item: Movie; index: number}) => {
       return (
-        <Layout
+        <TouchableWithoutFeedback
           key={index}
-          level="2"
           style={{
             display: 'flex',
             alignItems: 'center',
             width: screenWidth / 3,
-            marginBottom: 10
-          }}>
-          <View 
+            marginBottom: 10,
+          }}
+          onPress={() => {onClick?.call(null, item)}}
+          >
+          <View
             style={[
               styles.list_item_container,
               {
                 width: '100%',
               },
-            ]}
-          >
+            ]}>
             <MovieCatalogPlaceholder imageUrl={item.poster_path ?? ''} />
           </View>
           <Text category="s1" style={styles.list_item_title}>
             {item.title}
           </Text>
-        </Layout>
+        </TouchableWithoutFeedback>
       );
     };
   }, []);

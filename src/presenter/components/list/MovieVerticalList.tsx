@@ -3,22 +3,30 @@ import {View} from 'react-native';
 import MovieCatalogPlaceholder from '../placeholder/MovieCatalogPlaceholder';
 import {Button, Icon, List, Text} from '@ui-kitten/components';
 import {Movie, MovieFavorite} from '../../../domain/models/Movie';
+import { TouchableWithoutFeedback } from '@ui-kitten/components/devsupport';
 
 type MovieVerticalListProps = {
   data: MovieFavorite[];
+  onClick?: (movie: MovieFavorite) => void;
 };
 
 const MovieVerticalList = (props: MovieVerticalListProps) => {
   const MovieItem = ({item, key}: {item: MovieFavorite; key: number}) => (
-    <View
+    <TouchableWithoutFeedback
       key={key}
       style={{
         display: 'flex',
         flexDirection: 'row',
-        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 180,
         paddingHorizontal: 16,
         paddingVertical: 8,
-      }}>
+      }}
+      onPress={() => {
+        props.onClick?.call(null, item);
+      }}
+      >
       <View
         style={{
           height: '100%',
@@ -39,27 +47,15 @@ const MovieVerticalList = (props: MovieVerticalListProps) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '80%'
+            width: '95%',
           }}>
           <Text category="h6" numberOfLines={2} ellipsizeMode='tail'>{item.title}</Text>
           <Text category="p2" numberOfLines={5} ellipsizeMode="tail">
             {item.overview}
           </Text>
         </View>
-        <View style={{
-          width: '20%',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-          <Button
-            appearance="ghost"
-            status="danger"
-            accessoryLeft={<Icon name={'star'} />}
-          />
-        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 
   return (

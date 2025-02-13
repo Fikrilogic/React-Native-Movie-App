@@ -2,13 +2,13 @@ import {MovieRepository} from '../../data/repository/MovieRepository';
 import {Movie, MovieFavorite} from '../models/Movie';
 
 export interface GetFavoriteMovie {
-  call: (id: string) => Promise<MovieFavorite>;
+  call: (id: string) => Promise<MovieFavorite | null>;
 }
 
 const usecase = async (
   repository: MovieRepository,
   id: string
-): Promise<MovieFavorite> => {
+): Promise<MovieFavorite | null> => {
   try {
     return await repository.getFavorite(id);
   } catch (e) {

@@ -21,7 +21,6 @@ const InputSearch = (props: InputSearchProps) => {
       />}
     </TouchableWithoutFeedback>
   );
-  console.log(`is null ${props.endIcon === undefined}`)
   return (
     <Input
       value={props.value}

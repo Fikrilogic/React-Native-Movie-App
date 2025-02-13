@@ -4,11 +4,15 @@ import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Layout, useStyleSheet} from '@ui-kitten/components';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {MovieHorizontalList} from '../../../components';
 import {useHomeController} from '../../../../controller/DashboardHomeController';
 import {useApplication} from '../../../../module/AppModule';
-import { Movie } from '../../../../domain/models/Movie';
+import {Movie} from '../../../../domain/models/Movie';
+import {
+  LoadingSpinner,
+  SpinnerType,
+} from '../../../components/loading/LoadingSpinner';
 
 type DashboardHomeProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -30,7 +34,14 @@ const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
     getMovieUpcomingUsecase,
   } = useApplication();
 
-  const {fetchMovie, moviesNowPlaying, moviesPopular, moviesTopRated, moviesUpcoming} = useHomeController(
+  const {
+    fetchMovie,
+    loading,
+    moviesNowPlaying,
+    moviesPopular,
+    moviesTopRated,
+    moviesUpcoming,
+  } = useHomeController(
     getMovieNowPlayingUsecase,
     getMoviePopularUsecase,
     getMovieTopRatedUsecase,
@@ -41,34 +52,41 @@ const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
     fetchMovie();
   }, [fetchMovie]);
 
-  const navigateToDetails = (movie: Movie) => {
-    navigation.navigate(RouteNavigation.DETAIL, {movie})
-  }
+  const navigateToDetails = (id: string) => {
+    navigation.navigate(RouteNavigation.DETAIL, {id});
+  };
 
   return (
     <Layout level="2" style={styles.container_row}>
-      <ScrollView  contentContainerStyle={styles.scroll_container}>
-        <MovieHorizontalList
-          data={moviesNowPlaying?.results ?? []}
-          title="Now Playing"
-          onClick={(movie) => navigateToDetails(movie)}
-        />
-        <MovieHorizontalList
-          data={moviesUpcoming?.results ?? []}
-          title="Upcoming"
-          onClick={(movie) => navigateToDetails(movie)}
-        />
-        <MovieHorizontalList
-          data={moviesPopular?.results ?? []}
-          title="Popular"
-          onClick={(movie) => navigateToDetails(movie)}
-        />
-        <MovieHorizontalList
-          data={moviesTopRated?.results ?? []}
-          title="Top Rated"
-          onClick={(movie) => navigateToDetails(movie)}
-        />
-      </ScrollView>
+      {loading && (
+        <Layout level="2" style={styles.loading_container}>
+          <LoadingSpinner type={SpinnerType.GIANT} />
+        </Layout>
+      )}
+      {!loading && (
+        <ScrollView contentContainerStyle={styles.scroll_container}>
+          <MovieHorizontalList
+            data={moviesNowPlaying?.results ?? []}
+            title="Now Playing"
+            onClick={movie => navigateToDetails(movie?.id ?? '0')}
+          />
+          <MovieHorizontalList
+            data={moviesUpcoming?.results ?? []}
+            title="Upcoming"
+            onClick={movie => navigateToDetails(movie?.id ?? '0')}
+          />
+          <MovieHorizontalList
+            data={moviesPopular?.results ?? []}
+            title="Popular"
+            onClick={movie => navigateToDetails(movie?.id ?? '0')}
+          />
+          <MovieHorizontalList
+            data={moviesTopRated?.results ?? []}
+            title="Top Rated"
+            onClick={movie => navigateToDetails(movie?.id ?? '0')}
+          />
+        </ScrollView>
+      )}
     </Layout>
   );
 };
@@ -80,7 +98,12 @@ const dashboardHomeStyle = StyleSheet.create({
   scroll_container: {
     paddingVertical: 20,
     height: 'auto',
-  }
+  },
+  loading_container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default DashboardHome;

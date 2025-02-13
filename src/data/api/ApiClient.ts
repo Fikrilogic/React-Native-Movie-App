@@ -13,7 +13,7 @@ const Get = async <T>(endpoint: string): Promise<T> => {
     const data: T = res.data;
     return data;
   } catch (error) {
-    console.log(error);
+    throw error
     throw error;
   }
 

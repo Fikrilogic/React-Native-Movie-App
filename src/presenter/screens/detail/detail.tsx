@@ -48,11 +48,11 @@ const Detail = ({navigation, route}: Props) => {
   });
 
   useEffect(() => {
-    fetchMovie(params.movie.id ?? '0');
+    fetchMovie(params.id ?? '0');
   }, []);
 
   useEffect(() => {
-    getFavorite(params.movie.id ?? '0');
+    getFavorite(params.id ?? '0');
   }, []);
 
   const DetailMovieHeader = () => {
@@ -165,7 +165,7 @@ const Detail = ({navigation, route}: Props) => {
       icon={
         <Icon
           name={
-            +(movieFavorite?.id ?? '0') === +(params.movie?.id ?? '0')
+            movieFavorite?.is_favorite
               ? 'heart'
               : 'heart-outline'
           }

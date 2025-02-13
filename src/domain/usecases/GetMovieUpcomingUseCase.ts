@@ -8,7 +8,6 @@ export interface GetMovieUpcomingUseCase {
 
 const usecase = async (repository: MovieRepository): Promise<MovieResponse> => {
   const movies = await repository.getUpcoming();
-  console.log(`usecase: ${movies.results.length}`);
   movies.results = movies.results.slice(0, 8).map((movie: Movie) => {
     const newMovie = movie
     newMovie.poster_path = `${Constants.imgUrl}${movie.poster_path}`

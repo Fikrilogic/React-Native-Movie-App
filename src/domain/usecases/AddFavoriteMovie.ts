@@ -10,7 +10,13 @@ const usecase = async (
   movie: Movie,
 ): Promise<void> => {
   try {
-    await repository.addFavorite(movie);
+    const existMovie = await repository.getFavorite(movie.id ?? '0')
+    if (existMovie === null) {
+      await repository.addFavorite(movie);
+      return;
+    }
+    const isFavorite = !(existMovie?.is_favorite ?? false)
+    await repository.updateFavorite(movie, isFavorite)
     return;
   } catch (e) {
     throw e;

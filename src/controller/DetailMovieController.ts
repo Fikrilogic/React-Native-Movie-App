@@ -23,7 +23,7 @@ export const useDetailMovieController = (
       const movie = await getDetailMovie.call(id);
       setMovie(movie);
     } catch (e) {
-      console.log('controller ', e);
+      throw e
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,9 @@ export const useDetailMovieController = (
     setLoading(true);
     try {
       await addFavoriteMovie.call(movie);
-      console.log('add getFavorite')
       await getFavorite(movie.id ?? '0')
     } catch (e) {
-      console.log(e);
+      throw e
     } finally {
       setLoading(false)
     }
@@ -47,9 +46,8 @@ export const useDetailMovieController = (
     try {
       const fav = await getFavoriteMovie.call(id);
       setMovieFavorite(fav);
-      console.log(`success getFavorite ${fav.title}`)
     } catch (e) {
-      console.log(e);
+      throw e
     } finally {
       setLoading(false)
     }

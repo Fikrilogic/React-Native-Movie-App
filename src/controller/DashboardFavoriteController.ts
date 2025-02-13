@@ -12,7 +12,6 @@ export const useFavoriteController = (
   const fetchMovie = useCallback(async () => {
     setLoading(true);
     const movie = await getFavoriteMovies.call();
-    console.log(`favorite movie list ${movie.length}`)
     setMovie(movie);
     setLoading(false);
   }, []);
