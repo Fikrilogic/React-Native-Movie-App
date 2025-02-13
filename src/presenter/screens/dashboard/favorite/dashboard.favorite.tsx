@@ -1,10 +1,13 @@
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {CompositeScreenProps} from '@react-navigation/native';
-import React from 'react';
-import {View, Text} from 'react-native';
+import {CompositeScreenProps, useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect} from 'react';
 import {NavigationType, RouteNavigation} from '../../../navigations';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button} from '@react-navigation/elements';
+import {Layout} from '@ui-kitten/components';
+import {Movie} from '../../../../domain/models/Movie';
+import MovieVerticalList from '../../../components/list/MovieVerticalList';
+import {useApplication} from '../../../../module/AppModule';
+import {useFavoriteController} from '../../../../controller/DashboardFavoriteController';
 
 type DashboardFavoriteProps = CompositeScreenProps<
   BottomTabScreenProps<
@@ -17,17 +20,24 @@ type DashboardFavoriteProps = CompositeScreenProps<
   >
 >;
 
+
 const DashboardFavorite = ({navigation}: DashboardFavoriteProps) => {
+  const {getFavoritesMovie} = useApplication();
+
+  const {fetchMovie, movie} = useFavoriteController(getFavoritesMovie);
+
+  useFocusEffect(useCallback(() => {
+    fetchMovie();
+  }, []))
+
   return (
-    <View>
-      <Text>Favorite</Text>
-      <Button
-        onPress={() => {
-          navigation.navigate(RouteNavigation.DETAIL);
-        }}>
-        Click Here
-      </Button>
-    </View>
+    <Layout
+      level="2"
+      style={{
+        flex: 1,
+      }}>
+      <MovieVerticalList data={movie} />
+    </Layout>
   );
 };
 

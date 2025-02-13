@@ -1,5 +1,7 @@
-import {MovieResponse} from '../../domain/models/Movie';
+import {DB} from '@op-engineering/op-sqlite';
+import {Movie, MovieFavorite, MovieResponse} from '../../domain/models/Movie';
 import {ApiClient} from '../api/ApiClient';
+import {MOVIE_TABLE_NAME} from '../local/db';
 
 const getMovie = (
   client: ApiClient,
@@ -8,15 +10,94 @@ const getMovie = (
   return client.Get<MovieResponse>(endpoint);
 };
 
+const getMovieDetail = (
+  client: ApiClient,
+  endpoint: string,
+): Promise<Movie> => {
+  return client.Get<Movie>(endpoint);
+};
+
+const getMoviesFavorite = async (db: DB): Promise<MovieFavorite[]> => {
+  try {
+    let {rows} = await db.execute(`SELECT * FROM ${MOVIE_TABLE_NAME};`);
+    const listMovie: MovieFavorite[] = [];
+    rows.forEach(data => {
+      listMovie.push(new MovieFavorite(data));
+    });
+
+    return listMovie;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+};
+
+const getMovieFavorite = async (
+  db: DB,
+  id: string,
+): Promise<MovieFavorite> => {
+  try {
+    console.log(`movie id ${id}`)
+    let {rows} = await db.execute(
+      `SELECT * FROM ${MOVIE_TABLE_NAME} WHERE Id = ?;`,
+      [id],
+    );
+
+    let movie: MovieFavorite = new MovieFavorite(rows[0])
+    return movie;
+  } catch (e) {
+    throw e
+  }
+};
+
+const addFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
+  try {
+    const res = await db.execute(
+      `INSERT INTO ${MOVIE_TABLE_NAME} VALUES (?,?,?,?,?);`,
+      [
+        movie.id ?? '0',
+        movie.title ?? '',
+        movie.poster_path ?? '',
+        movie.overview ?? '',
+        true,
+      ],
+    );
+    console.log(`status: ${res.rowsAffected}`);
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const updateFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
+  try {
+    const res = await db.execute(
+      `UPDATE ${MOVIE_TABLE_NAME} SET IsFavorite = ? WHERE Id = ?;`,
+      [true, movie.id ?? '0'],
+    );
+    console.log(`status: ${res.rowsAffected}`);
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export interface MovieRepository {
   getNowPlaying: () => Promise<MovieResponse>;
   getPopular: () => Promise<MovieResponse>;
   getTopRated: () => Promise<MovieResponse>;
   getUpcoming: () => Promise<MovieResponse>;
   search: (query: string, page: number) => Promise<MovieResponse>;
+  detail: (id: string) => Promise<Movie>;
+  getFavorites: () => Promise<MovieFavorite[]>;
+  getFavorite: (id: string) => Promise<MovieFavorite>;
+  addFavorite: (movie: Movie) => Promise<void>;
 }
 
-export const MovieRepositoryImpl = (client: ApiClient): MovieRepository => ({
+export const MovieRepositoryImpl = (
+  client: ApiClient,
+  db: DB,
+): MovieRepository => ({
   getNowPlaying: () => getMovie(client, 'movie/now_playing'),
   getPopular: () => getMovie(client, 'movie/popular'),
   getTopRated: () => getMovie(client, 'movie/top_rated'),
@@ -26,4 +107,8 @@ export const MovieRepositoryImpl = (client: ApiClient): MovieRepository => ({
       client,
       `search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`,
     ),
+  detail: (id: string) => getMovieDetail(client, `movie/${id}&language=en-US`),
+  getFavorites: () => getMoviesFavorite(db),
+  getFavorite: (id: string) => getMovieFavorite(db, id),
+  addFavorite: (movie: Movie) => addFavoriteMovie(db, movie),
 });

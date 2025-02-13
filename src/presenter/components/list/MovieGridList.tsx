@@ -7,7 +7,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 type MovieGridListProps = {
   data: Movie[];
   maxCol: number;
-  onLoadMore?: () => void
+  onLoadMore?: () => void;
 };
 
 const screenWidth = Dimensions.get('screen').width;
@@ -18,15 +18,23 @@ const MovieGridList = ({data, maxCol, onLoadMore}: MovieGridListProps) => {
       return (
         <Layout
           key={index}
-          level='1'
-          style={[
-            styles.list_item_container,
-            {
-              width: screenWidth / 3,
-            },
-          ]}
+          level="2"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: screenWidth / 3,
+            marginBottom: 10
+          }}>
+          <View 
+            style={[
+              styles.list_item_container,
+              {
+                width: '100%',
+              },
+            ]}
           >
-          <MovieCatalogPlaceholder imageUrl={item.poster_path ?? ''} />
+            <MovieCatalogPlaceholder imageUrl={item.poster_path ?? ''} />
+          </View>
           <Text category="s1" style={styles.list_item_title}>
             {item.title}
           </Text>
@@ -41,7 +49,7 @@ const MovieGridList = ({data, maxCol, onLoadMore}: MovieGridListProps) => {
       data={data}
       numColumns={maxCol}
       contentContainerStyle={{
-        marginBottom: data.length !== 0 ? 30 : 0
+        marginBottom: data.length !== 0 ? 30 : 0,
       }}
       onEndReached={onLoadMore}
       onEndReachedThreshold={0.1}
@@ -51,14 +59,9 @@ const MovieGridList = ({data, maxCol, onLoadMore}: MovieGridListProps) => {
 
 const styles = StyleSheet.create({
   list_item_container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: 250,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    height: 200,
     marginHorizontal: 0,
-    paddingVertical: 8,
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
   },
   list_item_title: {},
 });

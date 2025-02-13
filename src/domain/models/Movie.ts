@@ -1,6 +1,9 @@
+import { Scalar } from "@op-engineering/op-sqlite";
+
 class Movie {
   original_title?: string;
   poster_path?: string;
+  backdrop_path?: string;
   id?: string;
   original_language?: string;
   popularity?: number;
@@ -8,35 +11,18 @@ class Movie {
   vote_average?: number;
   vote_count?: number;
   overview?: string;
+  tagline?: string
   release_date?: string;
-
-  // constructor(
-  //   original_title?: string,
-  //   poster_path?: string,
-  //   id?: string,
-  //   original_language?: string,
-  //   popularity?: number,
-  //   title?: string,
-  //   vote_average?: number,
-  //   vote_count?: number,
-  //   overview?: string,
-  //   release_date?: string,
-  // ) {
-  //   this.original_title = original_title;
-  //   this.poster_path = poster_path;
-  //   this.id = id;
-  //   this.original_language = original_language;
-  //   this.popularity = popularity;
-  //   this.title = title;
-  //   this.vote_average = vote_average;
-  //   this.vote_count = vote_count;
-  //   this.overview = overview;
-  //   this.release_date = release_date;
-  // }
+  status?: string
+  genres?: Genre[];
+  runtime?: number;
+  spoken_languages?: MovieSpokenLanguage[]
+  production_companies?: Company[]
 
   constructor({
     original_title,
     poster_path,
+    backdrop_path,
     id,
     original_language,
     popularity,
@@ -45,9 +31,16 @@ class Movie {
     vote_count,
     overview,
     release_date,
+    genres,
+    runtime,
+    spoken_languages,
+    production_companies,
+    tagline,
+    status
   }: {
     original_title?: string;
     poster_path?: string;
+    backdrop_path?: string;
     id?: string;
     original_language?: string;
     popularity?: number;
@@ -56,9 +49,16 @@ class Movie {
     vote_count?: number;
     overview?: string;
     release_date?: string;
+    genres?: Genre[];
+    runtime?: number;
+    spoken_languages?: MovieSpokenLanguage[],
+    production_companies?: Company[],
+    tagline?: string,
+    status?: string
   }) {
     this.original_title = original_title;
     this.poster_path = poster_path;
+    this.backdrop_path = backdrop_path;
     this.id = id;
     this.original_language = original_language;
     this.popularity = popularity;
@@ -67,6 +67,61 @@ class Movie {
     this.vote_count = vote_count;
     this.overview = overview;
     this.release_date = release_date;
+    this.genres = genres;
+    this.runtime = runtime;
+    this.spoken_languages = spoken_languages
+    this.production_companies = production_companies
+    this.status = status
+    this.tagline = tagline
+  }
+}
+
+class Genre {
+  id?: string;
+  name?: string;
+
+  constructor({id, name}: {id?: string; name?: string}) {
+    this.id = id;
+    this.name = name;
+  }
+}
+
+class Company {
+  id?: string
+  name?: string
+  origin_country?: string
+}
+
+class MovieSpokenLanguage {
+  english_name?: string;
+  name?: string;
+
+  constructor({
+    english_name, name
+  }: 
+    {
+      english_name?: string
+      name?: string
+    }
+  ) {
+    this.english_name = english_name
+    this.name = name
+  }
+}
+
+class MovieFavorite{
+  id?: string
+  title?: string
+  poster_path?: string
+  overview?: string
+  is_favorite?: boolean
+
+  constructor(data: Record<string, Scalar>){
+    this.id = data.Id as string
+    this.title = data.Title as string
+    this.poster_path = data.PosterPath as string
+    this.overview = data.Overview as string
+    this.is_favorite = data.IsFavorite as boolean
   }
 }
 
@@ -89,4 +144,4 @@ class MovieResponse {
   }
 }
 
-export {Movie, MovieResponse};
+export {Movie, MovieResponse, MovieFavorite};

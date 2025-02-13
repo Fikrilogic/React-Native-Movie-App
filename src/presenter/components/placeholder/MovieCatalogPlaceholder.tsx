@@ -22,7 +22,7 @@ const MovieCatalogPlaceholder = ({imageUrl}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '80%',
+    height: '100%',
     width: '100%',
   },
   img_content : {

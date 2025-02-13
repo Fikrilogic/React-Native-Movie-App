@@ -36,6 +36,7 @@ const AppNavigation = () => {
               fontWeight: 'bold',
             },
             headerTitleAlign: 'center',
+            headerShown: false
           }}
         />
       </RootStack.Navigator>

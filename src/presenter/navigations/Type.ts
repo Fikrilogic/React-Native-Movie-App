@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { Movie } from "../../domain/models/Movie";
 
 
 type DashboardTabParamList = {
@@ -9,7 +10,7 @@ type DashboardTabParamList = {
 
 type RootStackParamList = {
   DASHBOARD: NavigatorScreenParams<DashboardTabParamList>;
-  DETAIL: undefined;
+  DETAIL: {movie: Movie};
 };
 
 export type {RootStackParamList,DashboardTabParamList};

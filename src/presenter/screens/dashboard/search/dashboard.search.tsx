@@ -35,8 +35,8 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
   } = useSearchController(getMovieSearch);
 
   return (
-    <Layout style={styles.main_container} level="1">
-      <Layout level="1" style={{flex: 0, justifyContent: 'center'}}>
+    <Layout style={styles.main_container} level="2">
+      <Layout level="2" style={{flex: 0, justifyContent: 'center'}}>
         <InputSearch
           value={search}
           style={styles.input_search_style}
@@ -55,7 +55,7 @@ const DashboardSearch = ({navigation}: DashboardSearchProps) => {
         />
       </Layout>
       <Layout
-        level="1"
+        level="2"
         style={{
           flex: 0,
           justifyContent: 'center',
