@@ -25,31 +25,31 @@ export const useDetailMovieController = (
     } catch (e) {
       throw e
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 400)
     }
   }, []);
 
   const addFavorite = useCallback(async (movie: Movie) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       await addFavoriteMovie.call(movie);
       await getFavorite(movie.id ?? '0')
     } catch (e) {
       throw e
     } finally {
-      setLoading(false)
+      // setTimeout(() => setLoading(false), 400)
     }
   }, []);
 
   const getFavorite = useCallback(async (id: string) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const fav = await getFavoriteMovie.call(id);
       setMovieFavorite(fav);
     } catch (e) {
       throw e
     } finally {
-      setLoading(false)
+      // setTimeout(() => setLoading(false), 400)
     }
   }, []);
 

@@ -16,7 +16,8 @@ import {
 import {MovieCatalogPlaceholder} from '../../components';
 import {useApplication} from '../../../module/AppModule';
 import {useDetailMovieController} from '../../../controller/DetailMovieController';
-import {ImageProps} from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 type Props = NativeStackScreenProps<
   NavigationType.RootStackParamList,
@@ -32,7 +33,7 @@ const Detail = ({navigation, route}: Props) => {
   const theme = useTheme();
 
   const {getMovieDetail, addMovieFavorite, getFavoriteMovie} = useApplication();
-  const {fetchMovie, movie, movieFavorite, addFavorite, getFavorite} =
+  const {fetchMovie, movie, movieFavorite, loading, addFavorite, getFavorite} =
     useDetailMovieController(
       getMovieDetail,
       addMovieFavorite,
@@ -66,7 +67,15 @@ const Detail = ({navigation, route}: Props) => {
           },
         ]}>
         <View style={styles.movie_detail_header_image_container}>
-          <MovieCatalogPlaceholder imageUrl={movie?.poster_path ?? ''} />
+          {!loading && (
+            <MovieCatalogPlaceholder imageUrl={movie?.poster_path ?? ''} />
+          )}
+          {loading && (
+            <ShimmerPlaceholder
+              LinearGradient={LinearGradient}
+              style={styles.shimmer_img_placeholder}
+            />
+          )}
         </View>
         <Layout
           level="2"
@@ -76,34 +85,78 @@ const Detail = ({navigation, route}: Props) => {
             flex: 1,
             backgroundColor: 'transparent',
           }}>
-          <Text category="h3">{movie?.title}</Text>
-          <Text category="c2">
-            {movie?.genres?.map(item => item.name ?? '').join(', ')}
-          </Text>
+          {!loading && (
+            <View>
+              <Text category="h5">{movie?.title}</Text>
+              <Text category="c2">
+                {movie?.genres?.map(item => item.name ?? '').join(', ')}
+              </Text>
 
-          <Text
-            category="c1"
-            style={{marginTop: 8}}>{`${movie?.runtime} min`}</Text>
-          <View style={styles.movie_detail_header_button_group}>
-            <Button
-              accessoryLeft={<Icon name="play-circle" />}
-              style={{
-                flex: 1,
-              }}
-              status="success">
-              Play
-            </Button>
+              <Text
+                category="c1"
+                style={{marginTop: 8}}>{`${movie?.runtime} min`}</Text>
+              <View style={styles.movie_detail_header_button_group}>
+                <Button
+                  accessoryLeft={<Icon name="play-circle" />}
+                  style={{
+                    flex: 1,
+                  }}
+                  status="success">
+                  Play
+                </Button>
 
-            <Button
-              status="primary"
-              appearance="outline"
-              style={{
-                flex: 1,
-                marginStart: 5,
-              }}>
-              Trailer
-            </Button>
-          </View>
+                <Button
+                  status="primary"
+                  appearance="outline"
+                  style={{
+                    flex: 1,
+                    marginStart: 5,
+                  }}>
+                  Trailer
+                </Button>
+              </View>
+            </View>
+          )}
+
+          {loading && (
+            <View>
+              <ShimmerPlaceholder LinearGradient={LinearGradient} />
+
+              <ShimmerPlaceholder
+                LinearGradient={LinearGradient}
+                shimmerStyle={{
+                  marginTop: 8,
+                }}
+              />
+
+              <ShimmerPlaceholder
+                LinearGradient={LinearGradient}
+                shimmerStyle={{
+                  marginTop: 8,
+                  width: 40,
+                }}
+              />
+              <View style={styles.movie_detail_header_button_group}>
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    height: 40,
+                    marginEnd: 5,
+                    flex: 1,
+                    borderRadius: 5,
+                  }}
+                />
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    height: 40,
+                    flex: 1,
+                    borderRadius: 5,
+                  }}
+                />
+              </View>
+            </View>
+          )}
         </Layout>
       </Layout>
     );
@@ -120,13 +173,26 @@ const Detail = ({navigation, route}: Props) => {
       <View style={styles.movie_info_content_container}>
         <Text category="p2">{title}</Text>
 
-        <Text
-          category="p1"
-          style={{
-            marginTop: 5,
-          }}>
-          {data}
-        </Text>
+        {!loading && (
+          <Text
+            category="p1"
+            style={{
+              marginTop: 5,
+            }}>
+            {data}
+          </Text>
+        )}
+
+        {loading && (
+          <ShimmerPlaceholder
+            LinearGradient={LinearGradient}
+            shimmerStyle={{
+              width: '90%',
+              marginTop: 5,
+              height: 30,
+            }}
+          />
+        )}
       </View>
     );
   };
@@ -142,20 +208,32 @@ const Detail = ({navigation, route}: Props) => {
       <View style={styles.movie_info_content_container}>
         <Text category="p2">{title}</Text>
 
-        <View style={styles.movie_info_content_wrap}>
-          {data?.map((item, index) => (
-            <View
-              key={index}
-              style={[
-                styles.movie_info_content_wrap_item,
-                {
-                  backgroundColor: theme['color-primary-400'],
-                },
-              ]}>
-              <Text>{item}</Text>
-            </View>
-          ))}
-        </View>
+        {!loading && (
+          <View style={styles.movie_info_content_wrap}>
+            {data?.map((item, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.movie_info_content_wrap_item,
+                  {
+                    backgroundColor: theme['color-primary-400'],
+                  },
+                ]}>
+                <Text>{item}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+        {loading && (
+          <ShimmerPlaceholder
+            LinearGradient={LinearGradient}
+            shimmerStyle={{
+              width: '90%',
+              marginTop: 5,
+              height: 30,
+            }}
+          />
+        )}
       </View>
     );
   };
@@ -163,13 +241,7 @@ const Detail = ({navigation, route}: Props) => {
   const ButtonFavorite = () => (
     <TopNavigationAction
       icon={
-        <Icon
-          name={
-            movieFavorite?.is_favorite
-              ? 'heart'
-              : 'heart-outline'
-          }
-        />
+        <Icon name={movieFavorite?.is_favorite ? 'heart' : 'heart-outline'} />
       }
       onPress={() => {
         if (movie === null) return;
@@ -187,18 +259,30 @@ const Detail = ({navigation, route}: Props) => {
             width: '100%',
             position: 'absolute',
           }}>
-          <Image
-            style={{
-              height: '100%',
-              width: '100%',
-              position: 'absolute',
-              backgroundColor: theme['color-primary-700'],
-              opacity: 0.5,
-            }}
-            source={{
-              uri: movie?.backdrop_path,
-            }}
-          />
+          {!loading && (
+            <Image
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',
+                backgroundColor: theme['color-primary-700'],
+                opacity: 0.5,
+              }}
+              source={{
+                uri: movie?.backdrop_path,
+              }}
+            />
+          )}
+          {loading && (
+            <ShimmerPlaceholder
+              LinearGradient={LinearGradient}
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',
+              }}
+            />
+          )}
         </Animated.View>
         <TopNavigation
           alignment="center"
@@ -243,26 +327,138 @@ const Detail = ({navigation, route}: Props) => {
             alignItems: 'center',
           }}>
           <Layout level="2" style={styles.movie_info_column}>
-            <Text category="c1">Release Date</Text>
-            <Text category="p2">{movie?.release_date}</Text>
+            {!loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                <Text category="c1">Release Date</Text>
+                <Text category="p2">{movie?.release_date}</Text>
+              </View>
+            )}
+            {loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 100,
+                  marginHorizontal: 16,
+                }}>
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    width: '100%',
+                  }}
+                />
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    marginTop: 5,
+                    width: '100%',
+                  }}
+                />
+              </View>
+            )}
           </Layout>
-          <Divider style={{
-            height: '80%',
-            width: 1,
-            backgroundColor: 'white'
-          }}/>
+          <Divider
+            style={{
+              height: '80%',
+              width: 1,
+              backgroundColor: 'white',
+            }}
+          />
           <Layout level="2" style={styles.movie_info_column}>
-            <Text category="c1">Rating</Text>
-            <Text category="p2">{movie?.vote_average}</Text>
+            {!loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                <Text category="c1">Rating</Text>
+                <Text category="p2">{movie?.vote_average}</Text>
+              </View>
+            )}
+            {loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 100,
+                  marginHorizontal: 16,
+                }}>
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    width: '100%',
+                  }}
+                />
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    marginTop: 5,
+                    width: '100%',
+                  }}
+                />
+              </View>
+            )}
           </Layout>
-          <Divider style={{
-            height: '80%',
-            width: 1,
-            backgroundColor: 'white'
-          }}/>
+          <Divider
+            style={{
+              height: '80%',
+              width: 1,
+              backgroundColor: 'white',
+            }}
+          />
           <Layout level="2" style={styles.movie_info_column}>
-            <Text category="c1">Vote</Text>
-            <Text category="p2">{movie?.vote_count}</Text>
+            {!loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                <Text category="c1">Vote</Text>
+                <Text category="p2">{movie?.vote_count}</Text>
+              </View>
+            )}
+            {loading && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 100,
+                  marginHorizontal: 16,
+                }}>
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    width: '100%',
+                  }}
+                />
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  shimmerStyle={{
+                    marginHorizontal: 16,
+                    marginTop: 5,
+                    width: '100%',
+                  }}
+                />
+              </View>
+            )}
           </Layout>
         </Layout>
         <Divider />
@@ -340,6 +536,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 5,
     minWidth: 50,
+  },
+  shimmer_img_placeholder: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
 });
 

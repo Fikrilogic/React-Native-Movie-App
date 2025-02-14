@@ -13,8 +13,6 @@
     "@eva-design/eva": "^2.2.0",
     "@op-engineering/op-sqlite": "^11.4.5",
     "@react-native-async-storage/async-storage": "^2.1.0",
-    "@react-native-vector-icons/common": "^11.0.0",
-    "@react-native-vector-icons/ionicons": "^7.4.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/elements": "^2.2.5",
     "@react-navigation/native": "^7.0.14",
@@ -24,8 +22,10 @@
     "axios": "^1.7.9",
     "react": "18.3.1",
     "react-native": "0.76.6",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-safe-area-context": "^5.1.0",
     "react-native-screens": "^4.5.0",
+    "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-svg": "^15.11.1"
   },
   "devDependencies": {
