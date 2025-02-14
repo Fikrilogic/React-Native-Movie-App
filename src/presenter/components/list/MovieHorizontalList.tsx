@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 300,
     marginHorizontal: 8,
+    marginTop: 8
   },
   list_item_container: {
     height: '90%',
