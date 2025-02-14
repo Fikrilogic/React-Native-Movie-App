@@ -28,7 +28,8 @@ const MovieHorizontalList = ({
             justifyContent: 'space-between',
             flexDirection: 'column',
             width: screenWidth / 3,
-            marginEnd: 10
+            marginEnd: 10,
+            alignItems: 'center'
           }}
           onPress={() => {
             onClick?.call(null, item);
