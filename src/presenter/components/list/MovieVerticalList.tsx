@@ -11,7 +11,7 @@ type MovieVerticalListProps = {
 };
 
 const MovieVerticalList = (props: MovieVerticalListProps) => {
-  const MovieItem = ({item, key}: {item: MovieFavorite; key: number}) => (
+  const MovieItem = ({item, key}: {item: MovieFavorite, key: number}) => (
     <TouchableWithoutFeedback
       key={key}
       style={{
