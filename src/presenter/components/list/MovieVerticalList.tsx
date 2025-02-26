@@ -11,9 +11,9 @@ type MovieVerticalListProps = {
 };
 
 const MovieVerticalList = (props: MovieVerticalListProps) => {
-  const MovieItem = ({item, key}: {item: MovieFavorite, key: number}) => (
+  const MovieItem = ({item, index}: {item: MovieFavorite, index: number}) => (
     <TouchableWithoutFeedback
-      key={key}
+      key={index}
       style={{
         display: 'flex',
         flexDirection: 'row',
@@ -61,7 +61,7 @@ const MovieVerticalList = (props: MovieVerticalListProps) => {
   return (
     <List
       data={props.data}
-      renderItem={({item, index}) => <MovieItem item={item} key={index} />}
+      renderItem={({item, index}) => <MovieItem item={item} index={index} />}
     />
   );
 };

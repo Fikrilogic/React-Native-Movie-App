@@ -19,7 +19,7 @@ const MovieHorizontalList = ({
   onClick,
 }: MovieHorizontalListProps) => {
   const MovieItem = useMemo(() => {
-    return ({item, index}: {item: Movie; index: number}) => {
+    return ({item, index}: {item: Movie, index: number}) => {
       return (
         <TouchableWithoutFeedback
           key={index}
