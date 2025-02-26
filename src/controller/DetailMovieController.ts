@@ -3,6 +3,7 @@ import {Movie, MovieFavorite} from '../domain/models/Movie';
 import {GetMovieDetail} from '../domain/usecases/GetMovieDetail';
 import {AddFavoriteMovie} from '../domain/usecases/AddFavoriteMovie';
 import {GetFavoriteMovie} from '../domain/usecases/GetFavoriteMovie';
+import { showToastError, showToastSuccess } from '../commons/utils/toast';
 
 export const useDetailMovieController = (
   getDetailMovie: GetMovieDetail,
@@ -30,26 +31,20 @@ export const useDetailMovieController = (
   }, []);
 
   const addFavorite = useCallback(async (movie: Movie) => {
-    // setLoading(true);
     try {
       await addFavoriteMovie.call(movie);
       await getFavorite(movie.id ?? '0')
     } catch (e) {
-      throw e
-    } finally {
-      // setTimeout(() => setLoading(false), 400)
+      showToastError('Failed added to Favorite')
     }
   }, []);
 
   const getFavorite = useCallback(async (id: string) => {
-    // setLoading(true);
     try {
       const fav = await getFavoriteMovie.call(id);
       setMovieFavorite(fav);
     } catch (e) {
       throw e
-    } finally {
-      // setTimeout(() => setLoading(false), 400)
     }
   }, []);
 

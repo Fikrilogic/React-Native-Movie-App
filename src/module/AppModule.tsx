@@ -49,8 +49,7 @@ export const MainApplicationProvider = ({
   children: React.ReactNode;
 }) => {
   const db = openDatabase()
-  const result = useMigrations(db, migrations)
-  console.log(`migration result: ${result.success}`)
+  useMigrations(db, migrations)
   
   const client = ApiClientImpl();
   const movieRepository = MovieRepositoryImpl(client, db);

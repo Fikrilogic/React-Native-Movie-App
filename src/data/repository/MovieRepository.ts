@@ -59,7 +59,6 @@ const addFavoriteMovie = async (
   db: OPSQLiteDatabase | null,
   movie: Movie,
 ): Promise<void> => {
-  console.log(`executed: added`);
   if (!db) return;
   try {
     await db.insert(movieFavoriteTable).values({
@@ -80,7 +79,6 @@ const updateFavoriteMovie = async (
   movie: Movie,
   isFavorite: boolean,
 ): Promise<void> => {
-  console.log(`executed: updated`);
   if (!db) return;
   try {
     await db
@@ -89,7 +87,6 @@ const updateFavoriteMovie = async (
       .where(eq(movieFavoriteTable.id, movie.id ?? '0'));
     return;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
