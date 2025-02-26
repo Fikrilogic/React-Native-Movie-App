@@ -2,12 +2,19 @@ import {DB} from '@op-engineering/op-sqlite';
 import {Movie, MovieFavorite, MovieResponse} from '../../domain/models/Movie';
 import {ApiClient} from '../api/ApiClient';
 import {MOVIE_TABLE_NAME} from '../local/db';
+import {OPSQLiteDatabase} from 'drizzle-orm/op-sqlite';
+import {movieFavoriteTable} from '../../../db/schema';
+import {eq} from 'drizzle-orm';
 
 const getMovie = (
   client: ApiClient,
   endpoint: string,
 ): Promise<MovieResponse> => {
-  return client.Get<MovieResponse>(endpoint);
+  try {
+    return client.Get<MovieResponse>(endpoint);
+  } catch (e) {
+    throw e;
+  }
 };
 
 const getMovieDetail = (
@@ -17,52 +24,51 @@ const getMovieDetail = (
   return client.Get<Movie>(endpoint);
 };
 
-const getMoviesFavorite = async (db: DB): Promise<MovieFavorite[]> => {
+const getMoviesFavorite = async (
+  db: OPSQLiteDatabase | null,
+): Promise<MovieFavorite[]> => {
+  if (!db) return [];
   try {
-    let {rows} = await db.execute(
-      `SELECT * FROM ${MOVIE_TABLE_NAME} WHERE IsFavorite = ?;`,
-      [1],
-    );
-    const listMovie: MovieFavorite[] = [];
-    rows.forEach(data => {
-      listMovie.push(new MovieFavorite(data));
-    });
-
-    return listMovie;
+    const movie: MovieFavorite[] = await db
+      .select()
+      .from(movieFavoriteTable)
+      .where(eq(movieFavoriteTable.is_favorite, true));
+    return movie;
   } catch (e) {
     return [];
   }
 };
 
 const getMovieFavorite = async (
-  db: DB,
+  db: OPSQLiteDatabase | null,
   id: string,
 ): Promise<MovieFavorite | null> => {
+  if (!db) return null;
   try {
-    let {rows} = await db.execute(
-      `SELECT * FROM ${MOVIE_TABLE_NAME} WHERE Id = ?;`,
-      [id],
-    );
-
-    let movie: MovieFavorite = new MovieFavorite(rows[0]);
-    return movie;
+    const movie: MovieFavorite[] = await db
+      .select()
+      .from(movieFavoriteTable)
+      .where(eq(movieFavoriteTable.id, id));
+    return movie[0];
   } catch (e) {
     return null;
   }
 };
 
-const addFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
+const addFavoriteMovie = async (
+  db: OPSQLiteDatabase | null,
+  movie: Movie,
+): Promise<void> => {
+  console.log(`executed: added`);
+  if (!db) return;
   try {
-    const res = await db.execute(
-      `INSERT INTO ${MOVIE_TABLE_NAME} VALUES (?,?,?,?,?);`,
-      [
-        movie.id ?? '0',
-        movie.title ?? '',
-        movie.poster_path ?? '',
-        movie.overview ?? '',
-        true,
-      ],
-    );
+    await db.insert(movieFavoriteTable).values({
+      id: movie.id ?? '0',
+      title: movie.title,
+      poster_path: movie.poster_path,
+      overview: movie.overview,
+      is_favorite: true,
+    });
     return;
   } catch (e) {
     throw e;
@@ -70,17 +76,20 @@ const addFavoriteMovie = async (db: DB, movie: Movie): Promise<void> => {
 };
 
 const updateFavoriteMovie = async (
-  db: DB,
+  db: OPSQLiteDatabase | null,
   movie: Movie,
   isFavorite: boolean,
 ): Promise<void> => {
+  console.log(`executed: updated`);
+  if (!db) return;
   try {
-    const res = await db.execute(
-      `UPDATE ${MOVIE_TABLE_NAME} SET IsFavorite = ? WHERE Id = ?;`,
-      [isFavorite, movie.id ?? '0'],
-    );
+    await db
+      .update(movieFavoriteTable)
+      .set({is_favorite: isFavorite})
+      .where(eq(movieFavoriteTable.id, movie.id ?? '0'));
     return;
   } catch (e) {
+    console.log(e);
     throw e;
   }
 };
@@ -100,7 +109,7 @@ export interface MovieRepository {
 
 export const MovieRepositoryImpl = (
   client: ApiClient,
-  db: DB,
+  db: OPSQLiteDatabase | null,
 ): MovieRepository => ({
   getNowPlaying: () => getMovie(client, 'movie/now_playing'),
   getPopular: () => getMovie(client, 'movie/popular'),

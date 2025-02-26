@@ -1,4 +1,4 @@
-import { Scalar } from "@op-engineering/op-sqlite";
+import {Scalar} from '@op-engineering/op-sqlite';
 
 class Movie {
   original_title?: string;
@@ -11,13 +11,13 @@ class Movie {
   vote_average?: number;
   vote_count?: number;
   overview?: string;
-  tagline?: string
+  tagline?: string;
   release_date?: string;
-  status?: string
+  status?: string;
   genres?: Genre[];
   runtime?: number;
-  spoken_languages?: MovieSpokenLanguage[]
-  production_companies?: Company[]
+  spoken_languages?: MovieSpokenLanguage[];
+  production_companies?: Company[];
 
   constructor({
     original_title,
@@ -36,7 +36,7 @@ class Movie {
     spoken_languages,
     production_companies,
     tagline,
-    status
+    status,
   }: {
     original_title?: string;
     poster_path?: string;
@@ -51,10 +51,10 @@ class Movie {
     release_date?: string;
     genres?: Genre[];
     runtime?: number;
-    spoken_languages?: MovieSpokenLanguage[],
-    production_companies?: Company[],
-    tagline?: string,
-    status?: string
+    spoken_languages?: MovieSpokenLanguage[];
+    production_companies?: Company[];
+    tagline?: string;
+    status?: string;
   }) {
     this.original_title = original_title;
     this.poster_path = poster_path;
@@ -69,10 +69,10 @@ class Movie {
     this.release_date = release_date;
     this.genres = genres;
     this.runtime = runtime;
-    this.spoken_languages = spoken_languages
-    this.production_companies = production_companies
-    this.status = status
-    this.tagline = tagline
+    this.spoken_languages = spoken_languages;
+    this.production_companies = production_companies;
+    this.status = status;
+    this.tagline = tagline;
   }
 }
 
@@ -87,43 +87,28 @@ class Genre {
 }
 
 class Company {
-  id?: string
-  name?: string
-  origin_country?: string
+  id?: string;
+  name?: string;
+  origin_country?: string;
 }
 
 class MovieSpokenLanguage {
   english_name?: string;
   name?: string;
 
-  constructor({
-    english_name, name
-  }: 
-    {
-      english_name?: string
-      name?: string
-    }
-  ) {
-    this.english_name = english_name
-    this.name = name
+  constructor({english_name, name}: {english_name?: string; name?: string}) {
+    this.english_name = english_name;
+    this.name = name;
   }
 }
 
-class MovieFavorite{
-  id?: string
-  title?: string
-  poster_path?: string
-  overview?: string
-  is_favorite?: boolean
-
-  constructor(data: Record<string, Scalar>){
-    this.id = data.Id as string
-    this.title = data.Title as string
-    this.poster_path = data.PosterPath as string
-    this.overview = data.Overview as string
-    this.is_favorite = data.IsFavorite as boolean
-  }
-}
+type MovieFavorite = {
+  id: string;
+  title: string | null;
+  poster_path: string | null;
+  overview: string | null;
+  is_favorite: boolean | null;
+};
 
 class MovieResponse {
   results: Movie[];
@@ -144,4 +129,5 @@ class MovieResponse {
   }
 }
 
-export {Movie, MovieResponse, MovieFavorite};
+export {Movie, MovieResponse};
+export type {MovieFavorite};

@@ -21,10 +21,12 @@ import {
 } from '../domain/usecases/GetMovieUpcomingUseCase';
 import { GetMovieSearch, GetMovieSearchImpl } from '../domain/usecases/GetMovieSearch';
 import { GetMovieDetail, GetMovieDetailImpl } from '../domain/usecases/GetMovieDetail';
-import { createTableMovie, openDatabase } from '../data/local/db';
+import { openDatabase } from '../data/local/db';
 import { AddFavoriteMovie, AddFavoriteMovieImpl } from '../domain/usecases/AddFavoriteMovie';
 import { GetFavoriteMovies, GetFavoriteMoviesImpl } from '../domain/usecases/GetFavoriteMovies';
 import { GetFavoriteMovie, GetFavoriteMovieImpl } from '../domain/usecases/GetFavoriteMovie';
+import { useMigrations } from 'drizzle-orm/op-sqlite/migrator';
+import migrations from '../../drizzle/migrations';
 
 interface ApplicationContextProps {
   getMovieNowPlayingUsecase: GetMovieNowPlayingUseCase;
@@ -47,7 +49,8 @@ export const MainApplicationProvider = ({
   children: React.ReactNode;
 }) => {
   const db = openDatabase()
-  createTableMovie(db)
+  const result = useMigrations(db, migrations)
+  console.log(`migration result: ${result.success}`)
   
   const client = ApiClientImpl();
   const movieRepository = MovieRepositoryImpl(client, db);
