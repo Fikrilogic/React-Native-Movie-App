@@ -1,5 +1,5 @@
 import {MovieRepository} from '../../data/repository/MovieRepository';
-import {Movie, MovieFavorite} from '../models/Movie';
+import {MovieFavorite} from '../models/Movie';
 
 export interface GetFavoriteMovies {
   call: () => Promise<MovieFavorite[]>;

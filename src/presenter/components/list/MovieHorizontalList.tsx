@@ -1,9 +1,9 @@
-import {Layout, List, ListItem, Text} from '@ui-kitten/components';
-import React, {memo, useMemo} from 'react';
+import {Layout, List, Text} from '@ui-kitten/components';
+import React, {useMemo} from 'react';
 import MovieCatalogPlaceholder from '../placeholder/MovieCatalogPlaceholder';
 import {Movie} from '../../../domain/models/Movie';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import { TouchableWithoutFeedback } from '@ui-kitten/components/devsupport';
+import {TouchableWithoutFeedback} from '@ui-kitten/components/devsupport';
 
 type MovieHorizontalListProps = {
   data: Array<Movie>;
@@ -19,7 +19,7 @@ const MovieHorizontalList = ({
   onClick,
 }: MovieHorizontalListProps) => {
   const MovieItem = useMemo(() => {
-    return ({item, index}: {item: Movie, index: number}) => {
+    return ({item, index}: {item: Movie; index: number}) => {
       return (
         <TouchableWithoutFeedback
           key={index}
@@ -29,7 +29,7 @@ const MovieHorizontalList = ({
             flexDirection: 'column',
             width: screenWidth / 3,
             marginEnd: 10,
-            alignItems: 'center'
+            alignItems: 'center',
           }}
           onPress={() => {
             onClick?.call(null, item);
@@ -52,12 +52,12 @@ const MovieHorizontalList = ({
   }, []);
 
   return (
-    <Layout level='2' style={styles.main_container}>
+    <Layout level="2" style={styles.main_container}>
       <Text category="h4">{title}</Text>
       <List
-      style={{
-        marginTop: 10
-      }}
+        style={{
+          marginTop: 10,
+        }}
         data={data}
         renderItem={({item, index}) => <MovieItem item={item} index={index} />}
         horizontal={true}
@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 300,
     marginHorizontal: 8,
-    marginTop: 8
+    marginTop: 8,
   },
   list_item_container: {
     height: '90%',
   },
   list_item_title: {
-    marginTop: 5
+    marginTop: 5,
   },
 });
 

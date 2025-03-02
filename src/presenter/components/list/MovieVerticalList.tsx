@@ -1,9 +1,9 @@
 import React from 'react';
 import {View} from 'react-native';
 import MovieCatalogPlaceholder from '../placeholder/MovieCatalogPlaceholder';
-import {Button, Icon, List, Text} from '@ui-kitten/components';
-import {Movie, MovieFavorite} from '../../../domain/models/Movie';
-import { TouchableWithoutFeedback } from '@ui-kitten/components/devsupport';
+import {List, Text} from '@ui-kitten/components';
+import {MovieFavorite} from '../../../domain/models/Movie';
+import {TouchableWithoutFeedback} from '@ui-kitten/components/devsupport';
 
 type MovieVerticalListProps = {
   data: MovieFavorite[];
@@ -11,7 +11,7 @@ type MovieVerticalListProps = {
 };
 
 const MovieVerticalList = (props: MovieVerticalListProps) => {
-  const MovieItem = ({item, index}: {item: MovieFavorite, index: number}) => (
+  const MovieItem = ({item, index}: {item: MovieFavorite; index: number}) => (
     <TouchableWithoutFeedback
       key={index}
       style={{
@@ -25,8 +25,7 @@ const MovieVerticalList = (props: MovieVerticalListProps) => {
       }}
       onPress={() => {
         props.onClick?.call(null, item);
-      }}
-      >
+      }}>
       <View
         style={{
           height: '100%',
@@ -49,9 +48,11 @@ const MovieVerticalList = (props: MovieVerticalListProps) => {
             flexDirection: 'column',
             width: '95%',
           }}>
-          <Text category="h6" numberOfLines={2} ellipsizeMode='tail'>{item.title}</Text>
+          <Text category="h6" numberOfLines={2} ellipsizeMode="tail">
+            {item.title ?? '-'}
+          </Text>
           <Text category="p2" numberOfLines={5} ellipsizeMode="tail">
-            {item.overview}
+            {item.overview ?? '-'}
           </Text>
         </View>
       </View>

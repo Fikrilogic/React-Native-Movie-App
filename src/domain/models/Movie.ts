@@ -1,5 +1,3 @@
-import {Scalar} from '@op-engineering/op-sqlite';
-
 class Movie {
   original_title?: string;
   poster_path?: string;

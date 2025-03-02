@@ -11,7 +11,6 @@ import {
   useTheme,
   TopNavigation,
   TopNavigationAction,
-  IconElement,
 } from '@ui-kitten/components';
 import {MovieCatalogPlaceholder} from '../../components';
 import {useApplication} from '../../../module/AppModule';

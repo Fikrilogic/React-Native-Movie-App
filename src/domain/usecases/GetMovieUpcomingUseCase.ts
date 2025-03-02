@@ -1,4 +1,4 @@
-import { Constants } from '../../commons';
+import {Constants} from '../../commons';
 import {MovieRepository} from '../../data/repository/MovieRepository';
 import {Movie, MovieResponse} from '../models/Movie';
 
@@ -9,9 +9,9 @@ export interface GetMovieUpcomingUseCase {
 const usecase = async (repository: MovieRepository): Promise<MovieResponse> => {
   const movies = await repository.getUpcoming();
   movies.results = movies.results.slice(0, 8).map((movie: Movie) => {
-    const newMovie = movie
-    newMovie.poster_path = `${Constants.imgUrl}${movie.poster_path}`
-    return newMovie
+    const newMovie = movie;
+    newMovie.poster_path = `${Constants.imgUrl}${movie.poster_path}`;
+    return newMovie;
   });
   return movies;
 };

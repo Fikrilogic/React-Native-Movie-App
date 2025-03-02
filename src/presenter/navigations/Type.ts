@@ -1,5 +1,4 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { Movie } from "../../domain/models/Movie";
 
 
 type DashboardTabParamList = {

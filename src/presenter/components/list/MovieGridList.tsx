@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {Movie} from '../../../domain/models/Movie';
-import {Layout, List, ListItem, Text} from '@ui-kitten/components';
+import { List, Text} from '@ui-kitten/components';
 import MovieCatalogPlaceholder from '../placeholder/MovieCatalogPlaceholder';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TouchableWithoutFeedback} from '@ui-kitten/components/devsupport';

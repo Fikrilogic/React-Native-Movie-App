@@ -1,5 +1,4 @@
 import React from 'react';
-import {Card} from '@ui-kitten/components';
 import {Image, StyleSheet, View} from 'react-native';
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 
 const MovieCatalogPlaceholder = ({imageUrl}: Props) => {
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <Image
         source={{
           uri: imageUrl,
@@ -25,12 +24,12 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  img_content : {
+  img_content: {
     borderRadius: 15,
     height: '100%',
     width: '100%',
     borderWidth: 1,
-  }
+  },
 });
 
 export default MovieCatalogPlaceholder;

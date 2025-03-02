@@ -3,7 +3,7 @@ import {Movie, MovieFavorite} from '../domain/models/Movie';
 import {GetMovieDetail} from '../domain/usecases/GetMovieDetail';
 import {AddFavoriteMovie} from '../domain/usecases/AddFavoriteMovie';
 import {GetFavoriteMovie} from '../domain/usecases/GetFavoriteMovie';
-import { showToastError, showToastSuccess } from '../commons/utils/toast';
+import { showToastError } from '../commons/utils/toast';
 
 export const useDetailMovieController = (
   getDetailMovie: GetMovieDetail,

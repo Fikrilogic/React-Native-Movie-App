@@ -1,7 +1,5 @@
-import {DB} from '@op-engineering/op-sqlite';
 import {Movie, MovieFavorite, MovieResponse} from '../../domain/models/Movie';
 import {ApiClient} from '../api/ApiClient';
-import {MOVIE_TABLE_NAME} from '../local/db';
 import {OPSQLiteDatabase} from 'drizzle-orm/op-sqlite';
 import {movieFavoriteTable} from '../../../db/schema';
 import {eq} from 'drizzle-orm';

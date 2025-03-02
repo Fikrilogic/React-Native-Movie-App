@@ -9,11 +9,10 @@ import {
   TopNavigation,
   useStyleSheet,
 } from '@ui-kitten/components';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {MovieHorizontalList} from '../../../components';
 import {useHomeController} from '../../../../controller/DashboardHomeController';
 import {useApplication} from '../../../../module/AppModule';
-import {Movie} from '../../../../domain/models/Movie';
 import {
   LoadingSpinner,
   SpinnerType,
@@ -30,7 +29,7 @@ type DashboardHomeProps = CompositeScreenProps<
   >
 >;
 
-const DashboardHome = ({navigation, route}: DashboardHomeProps) => {
+const DashboardHome = ({navigation}: DashboardHomeProps) => {
   const styles = useStyleSheet(dashboardHomeStyle);
   const {
     getMovieNowPlayingUsecase,
