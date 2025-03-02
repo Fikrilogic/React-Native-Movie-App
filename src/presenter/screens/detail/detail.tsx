@@ -18,6 +18,7 @@ import {useApplication} from '../../../module/AppModule';
 import {useDetailMovieController} from '../../../controller/DetailMovieController';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<
   NavigationType.RootStackParamList,
@@ -39,6 +40,8 @@ const Detail = ({navigation, route}: Props) => {
       addMovieFavorite,
       getFavoriteMovie,
     );
+  
+    const insets = useSafeAreaInsets();
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -251,7 +254,9 @@ const Detail = ({navigation, route}: Props) => {
   );
 
   return (
-    <Layout level="2" style={styles.movie_detail_root}>
+    <Layout level="2" style={[styles.movie_detail_root, {
+      paddingTop: insets.top
+    }]}>
       <View>
         <Animated.View
           style={{
@@ -309,6 +314,7 @@ const Detail = ({navigation, route}: Props) => {
           right: 0,
           paddingBottom: 120,
           paddingHorizontal: 16,
+          paddingTop: insets.top
         }}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
